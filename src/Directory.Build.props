@@ -1,0 +1,48 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Generated.props', '$(MSBuildThisFileDirectory)'))" />
+
+  <PropertyGroup>
+    <Copyright>Copyright © 2013-2023 Akka.NET Team</Copyright>
+    <Authors>Akka.NET Team</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);CS1591;xUnit1051</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NetStandardLibVersion>netstandard2.0</NetStandardLibVersion>
+    <NetLibVersion>net6.0</NetLibVersion>
+    <NetCoreTestVersion>net8.0</NetCoreTestVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\..\docs\images\icon.png" Pack="true" Visible="false" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)\..\README.md" Pack="true" Visible="false" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- GitHub SourceLink -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <!-- NuGet package properties -->
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/akkadotnet/Akka.Persistence.Sql</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>akka;actors;actor model;Akka;concurrency;persistence;sql</PackageTags>
+  </PropertyGroup>
+</Project>

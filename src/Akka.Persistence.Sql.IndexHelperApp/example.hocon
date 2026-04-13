@@ -1,0 +1,15 @@
+akka.persistence.journal.sql {
+  testGen {
+    class = "Akka.Persistence.Sql.Journal.SqlWriteJournal, Akka.Persistence.Sql"
+    provider-name = "SqlServer"
+    connection-string = "connStr"
+    tables {
+      journal {
+        auto-init = true
+        warn-on-auto-init-fail = false
+        table-name = "journalTbl"
+        metadata-table-name = "metadataTbl"
+      }
+    }
+  }
+}

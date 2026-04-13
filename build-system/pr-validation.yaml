@@ -1,0 +1,49 @@
+trigger:
+  branches:
+    include:
+      - dev
+      - master
+
+pr:
+  autoCancel: true # indicates whether additional pushes to a PR should cancel in-progress runs for the same PR. Defaults to true
+  branches:
+    include: [ dev, master ] # branch names which will trigger a build
+
+name: $(SourceBranchName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+
+jobs:
+  # Windows runs all tests in a single job (no Docker disk space issues)
+  - template: azure-pipeline.template.yaml
+    parameters:
+      name: 'windows_pr'
+      displayName: 'Windows PR Validation'
+      vmImage: 'windows-latest'
+      outputDirectory: 'bin/nuget'
+      artifactName: 'nuget_pack-$(Build.BuildId)'
+
+  # Linux tests are split by database type to run in parallel on separate VMs.
+  # This avoids disk space exhaustion from large Docker images (~3GB total for
+  # SQL Server, PostgreSQL, and MySQL) on Azure hosted runners (~14GB disk).
+  - template: linux-test.template.yaml
+    parameters:
+      name: 'linux_sqlite'
+      displayName: 'Linux - SQLite'
+      testFilter: 'FullyQualifiedName~Sqlite'
+
+  - template: linux-test.template.yaml
+    parameters:
+      name: 'linux_sqlserver'
+      displayName: 'Linux - SQL Server'
+      testFilter: 'FullyQualifiedName~SqlServer'
+
+  - template: linux-test.template.yaml
+    parameters:
+      name: 'linux_postgresql'
+      displayName: 'Linux - PostgreSQL'
+      testFilter: 'FullyQualifiedName~PostgreSql'
+
+  - template: linux-test.template.yaml
+    parameters:
+      name: 'linux_mysql'
+      displayName: 'Linux - MySQL'
+      testFilter: 'FullyQualifiedName~MySql'
